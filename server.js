@@ -11,8 +11,8 @@ const database = {
     users: [
         {
             id: '1',
-            name: 'John',
-            email: 'john@gmail.com',
+            name: 'Jean',
+            email: 'jean@gmail.com',
             password: '123',
             entries: 0,
             joined: new Date()
