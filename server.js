@@ -1,15 +1,15 @@
-const express = require ('express');
+const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require ('cors');
+const cors = require('cors');
 const knex = require('knex')
 
 const db = knex({
     client: 'pg',
     connection: {
-        host : '127.0.0.1',
-        user : 'kdeubuntudev',
-        password : 'KDEUbuntuDev!',
-        database : 'face_detectionReactDB'
+        host: '127.0.0.1',
+        user: 'kdeubuntudev',
+        password: 'KDEUbuntuDev!',
+        database: 'face_detectionReactDB'
     }
 });
 
@@ -54,51 +54,48 @@ app.post('/signin', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    const { email, name, password } = req.body;
+    const {email, name, password} = req.body;
     db('users')
         .returning('*')
         .insert({
-        email: email,
-        name: name,
-        joined: new Date()
-    }).then(user => {
+            email: email,
+            name: name,
+            joined: new Date()
+        }).then(user => {
         res.json(user[0])
     }).catch(err => res.status(400).json('unable to register'))
 });
 
-app.get ('/profile/:id', (req, res) => {
-    const { id } = req.params;
-    let found = false;
+app.get('/profile/:id', (req, res) => {
+    const {id} = req.params;
 
-    database.users.forEach(user => {
-        if (user.id === id){
-            found = true;
-            return res.json(user);
-        }
-    });
-
-    if (!found){
-        res.status(404).json('No user');
-    }
+    db.select('*').from('users').where({id: id})
+        .then(user => {
+            if(user.length){
+                res.json(user[0]);
+            } else {
+                res.status(400).json('Not found')
+            }
+        }).catch(err => res.status(400).json('Error getting user'));
 });
 
 app.put('/image', (req, res) => {
-    const { id } = req.body;
+    const {id} = req.body;
     let found = false;
 
     database.users.forEach(user => {
-        if (user.id === id){
+        if (user.id === id) {
             found = true;
             user.entries++;
             return res.json(user.entries);
         }
     });
 
-    if (!found){
+    if (!found) {
         res.status(404).json('No user');
     }
 });
 
 app.listen(port, () => {
-   console.log("Server running on port ", port)
+    console.log("Server running on port ", port)
 });
