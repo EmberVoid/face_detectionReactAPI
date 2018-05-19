@@ -12,10 +12,8 @@ const image = require('./controllers/image');
 const db = knex({
     client: 'pg',
     connection: {
-        host: '127.0.0.1',
-        user: 'kdeubuntudev',
-        password: 'KDEUbuntuDev!',
-        database: 'face_detectionReactDB'
+        ConnectionString: process.env.DATABASE_URL,
+        ssl: true,
     }
 });
 
